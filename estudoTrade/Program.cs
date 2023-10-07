@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Entidades;
+using Newtonsoft.Json;
 using System.Net;
 
 namespace estudoTrade
@@ -8,7 +9,7 @@ namespace estudoTrade
         static void Main(string[] args)
         {
             //Buscar dados
-            string[][] dados = GetDados("ETH_USDT", "DAY_1");
+           List<Candle> dados = GetDados("ETH_USDT", "DAY_1");
 
             //Calculadora
             int quantidade = dados.Count();
@@ -19,7 +20,7 @@ namespace estudoTrade
 
         }
 
-        public static string[][] GetDados(string market, string interval)
+        public static List<Candle> GetDados(string market, string interval)
         {
             WebRequest request = WebRequest.Create(string.Format(@"https://api.poloniex.com/markets/{0}/candles?interval={1}", market, interval));
             WebResponse response = request.GetResponse();
@@ -27,7 +28,7 @@ namespace estudoTrade
             StreamReader reader = new StreamReader(datastream);              
             var content = reader.ReadToEnd();
 
-            string[][] data = JsonConvert.DeserializeObject<string[][]>(content);
+            List<Candle> data = JsonConvert.DeserializeObject<List<Candle>>(content);
 
             if (data == null)
                 throw new Exception();
